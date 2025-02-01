@@ -43,3 +43,19 @@
  configurations.named(log4jPlugins.compileClasspathConfigurationName) {
      extendsFrom(configurations.compileClasspath.get())
  }
+@@ -178,11 +_,12 @@
+ 
+ tasks.jar {
+     manifest {
+-        val git = Git(rootProject.layout.projectDirectory.path)
++        val git = Git(rootProject.layout.projectDirectory.dir("paper-server"))
+         val mcVersion = rootProject.providers.gradleProperty("mcVersion").get()
+-        val build = System.getenv("BUILD_NUMBER") ?: null
++        val build = if (System.getenv("CI") != null) rootProject.providers.gradleProperty("paperBuild").get() else null
+         val buildTime = if (build != null) Instant.now() else Instant.EPOCH
+-        val gitHash = git.exec(providers, "rev-parse", "--short=7", "HEAD").get().trim()
++        val paperRef = rootProject.providers.gradleProperty("paperRef").get()
++        val gitHash = git.exec(providers, "rev-parse", "--short=7", paperRef).get().trim()
+         val implementationVersion = "$mcVersion-${build ?: "DEV"}-$gitHash"
+         val date = git.exec(providers, "show", "-s", "--format=%ci", gitHash).get().trim()
+         val gitBranch = git.exec(providers, "rev-parse", "--abbrev-ref", "HEAD").get().trim()
