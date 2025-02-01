@@ -12,5 +12,5 @@ plugins {
 
 rootProject.name = "fork"
 
-include("fork-api")
 include("fork-server")
+include("paper-api")
