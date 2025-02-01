@@ -11,8 +11,8 @@ paperweight {
 
         patchFile {
             path = "paper-server/build.gradle.kts"
-            outputFile = file("fork-server/build.gradle.kts")
-            patchFile = file("fork-server/build.gradle.kts.patch")
+            outputFile = file("fork/build.gradle.kts")
+            patchFile = file("patches/paper/build.gradle.kts.patch")
         }
 
         // We don't patch the Paper API, but we need paperweight to import it

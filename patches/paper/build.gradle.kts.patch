@@ -1,14 +1,17 @@
 --- a/paper-server/build.gradle.kts
 +++ b/paper-server/build.gradle.kts
-@@ -21,6 +_,17 @@
+@@ -21,6 +_,20 @@
      // macheOldPath = file("F:\\Projects\\PaperTooling\\mache\\versions\\1.21.4\\src\\main\\java")
      // gitFilePatches = true
  
 +    val fork = forks.register("fork") {
++        serverDirectory = rootDirectory.dir("fork")
++        serverPatchesDir = rootDirectory.dir("patches/minecraft")
++
 +        upstream.patchDir("paperServer") {
 +            upstreamPath = "paper-server"
 +            excludes = setOf("src/minecraft", "patches", "build.gradle.kts")
-+            patchesDir = rootDirectory.dir("fork-server/paper-patches")
++            patchesDir = rootDirectory.dir("patches/paper")
 +            outputDir = rootDirectory.dir("paper-server")
 +        }
 +    }
