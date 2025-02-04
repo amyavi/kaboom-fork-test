@@ -1,0 +1,20 @@
+--- a/net/minecraft/server/commands/ReturnCommand.java
++++ b/net/minecraft/server/commands/ReturnCommand.java
+@@ -16,7 +_,7 @@
+ import net.minecraft.commands.execution.tasks.FallthroughTask;
+ 
+ public class ReturnCommand {
+-    public static <T extends ExecutionCommandSource<T>> void register(CommandDispatcher<T> dispatcher) {
++    public static <T extends ExecutionCommandSource<T>> void register(CommandDispatcher<T> dispatcher, CommandDispatcher<T> runDispatcher) { // Kaboom
+         dispatcher.register(
+             (LiteralArgumentBuilder<T>)LiteralArgumentBuilder.<T>literal("return")
+                 .requires(executionCommandSource -> executionCommandSource.hasPermission(2))
+@@ -25,7 +_,7 @@
+                         .executes(new ReturnCommand.ReturnValueCustomExecutor<>())
+                 )
+                 .then(LiteralArgumentBuilder.<T>literal("fail").executes(new ReturnCommand.ReturnFailCustomExecutor<>()))
+-                .then(LiteralArgumentBuilder.<T>literal("run").forward(dispatcher.getRoot(), new ReturnCommand.ReturnFromCommandCustomModifier<>(), false))
++                .then(LiteralArgumentBuilder.<T>literal("run").forward(runDispatcher.getRoot(), new ReturnCommand.ReturnFromCommandCustomModifier<>(), false)) // Kaboom
+         );
+     }
+ 

@@ -1,11 +1,13 @@
 --- a/ca/spottedleaf/dataconverter/util/CommandArgumentUpgrader.java
 +++ b/ca/spottedleaf/dataconverter/util/CommandArgumentUpgrader.java
-@@ -130,7 +_,7 @@
+@@ -130,8 +_,8 @@
          for (final Consumer<CommandDispatcher<CommandSourceStack>> extra : builder.extra) {
              extra.accept(this.dispatcher);
          }
 -        ExecuteCommand.register(this.dispatcher, context);
+-        ReturnCommand.register(this.dispatcher);
 +        ExecuteCommand.register(this.dispatcher, context, this.dispatcher); // Kaboom
-         ReturnCommand.register(this.dispatcher);
++        ReturnCommand.register(this.dispatcher, this.dispatcher); // Kaboom
          // This looks weird, but it's what vanilla does when loading functions for datapacks
          this.source = new CommandSourceStack(
+             CommandSource.NULL,

@@ -1,0 +1,39 @@
+--- a/src/main/java/io/papermc/paper/command/brigadier/bukkit/BukkitBrigForwardingMap.java
++++ b/src/main/java/io/papermc/paper/command/brigadier/bukkit/BukkitBrigForwardingMap.java
+@@ -102,6 +_,18 @@
+         } else {
+             this.getDispatcher().getRoot().addChild(BukkitCommandNode.of(key, value));
+         }
++
++        // Kaboom start - Handle aliases for vanilla commands in /execute
++        if (key.startsWith("minecraft:")) {
++            final String cmd = key.substring("minecraft:".length());
++
++            final CommandDispatcher<CommandSourceStack> vanillaDispatcher = PaperCommands.INSTANCE.vanillaDispatcher;
++            if (vanillaDispatcher.getRoot().getChild(cmd) != null) {
++                vanillaDispatcher.getRoot().removeCommand(cmd);
++                vanillaDispatcher.getRoot().addChild(BukkitCommandNode.of(cmd, value));
++            }
++        }
++        // Kaboom end
+         return old;
+     }
+ 
+@@ -114,6 +_,17 @@
+         Command old = this.get(key);
+          if (old != null) {
+              this.getDispatcher().getRoot().removeCommand(string);
++
++             // Kaboom start
++             if (string.startsWith("minecraft:")) {
++                 final String cmd = string.substring("minecraft:".length());
++
++                 final CommandDispatcher<CommandSourceStack> vanillaDispatcher = PaperCommands.INSTANCE.vanillaDispatcher;
++                 if (vanillaDispatcher.getRoot().getChild(cmd) != null) {
++                     vanillaDispatcher.getRoot().removeCommand(cmd);
++                 }
++             }
++             // Kaboom end
+          }
+ 
+         return old;

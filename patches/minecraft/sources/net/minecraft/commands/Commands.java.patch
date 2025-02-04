@@ -1,10 +1,12 @@
 --- a/net/minecraft/commands/Commands.java
 +++ b/net/minecraft/commands/Commands.java
-@@ -150,9 +_,10 @@
+@@ -148,11 +_,12 @@
+     public static final int LEVEL_ADMINS = 3;
+     public static final int LEVEL_OWNERS = 4;
      private final CommandDispatcher<CommandSourceStack> dispatcher = new CommandDispatcher<>();
++    public final CommandDispatcher<CommandSourceStack> vanillaDispatcher = new CommandDispatcher<>(); // Kaboom
  
      public Commands(Commands.CommandSelection selection, CommandBuildContext context) {
-+        final CommandDispatcher<CommandSourceStack> vanillaDispatcher = new CommandDispatcher<>(); // Kaboom
          AdvancementCommands.register(this.dispatcher);
          AttributeCommand.register(this.dispatcher, context);
 -        ExecuteCommand.register(this.dispatcher, context);
@@ -12,15 +14,24 @@
          BossBarCommands.register(this.dispatcher, context);
          ClearInventoryCommands.register(this.dispatcher, context);
          CloneCommands.register(this.dispatcher, context);
+@@ -187,7 +_,7 @@
+         RandomCommand.register(this.dispatcher);
+         ReloadCommand.register(this.dispatcher);
+         RecipeCommand.register(this.dispatcher);
+-        ReturnCommand.register(this.dispatcher);
++        ReturnCommand.register(this.dispatcher, vanillaDispatcher); // Kaboom
+         RideCommand.register(this.dispatcher);
+         RotateCommand.register(this.dispatcher);
+         SayCommand.register(this.dispatcher);
 @@ -258,6 +_,12 @@
              }
          }
          // Paper end - Vanilla command permission fixes
 +        // Kaboom start
-+        for (final CommandNode<CommandSourceStack> node : new java.util.ArrayList<>(this.dispatcher.getRoot().getChildren())) {
-+            vanillaDispatcher.getRoot().addChild(node);
++        for (final CommandNode<CommandSourceStack> node : this.dispatcher.getRoot().getChildren()) {
++            this.vanillaDispatcher.getRoot().addChild(node);
 +        }
-+        vanillaDispatcher.setConsumer(ExecutionCommandSource.resultConsumer());
++        this.vanillaDispatcher.setConsumer(ExecutionCommandSource.resultConsumer());
 +        // Kaboom end
          // Paper start - Brigadier Command API
          // Create legacy minecraft namespace commands
